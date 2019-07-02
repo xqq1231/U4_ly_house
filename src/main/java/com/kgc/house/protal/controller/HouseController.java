@@ -1,10 +1,7 @@
 package com.kgc.house.protal.controller;
 
 import com.github.pagehelper.PageInfo;
-import com.kgc.house.entity.District;
-import com.kgc.house.entity.House;
-import com.kgc.house.entity.Type;
-import com.kgc.house.entity.Users;
+import com.kgc.house.entity.*;
 import com.kgc.house.service.DistrictService;
 import com.kgc.house.service.HouseService;
 import com.kgc.house.service.TypeService;
@@ -161,4 +158,18 @@ public class HouseController {
         return "{\"result\":"+temp+"}";
         //return "redirect:getUserHouse";  //跳转到查询用户出租房
     }
+    //查询所有浏览出租房信息
+    @RequestMapping("goList")
+    public String goList(HouseCondition condition, Model model){  //传页码
+        //调用业务获取出租房
+        PageInfo<House> pageInfo=houseService.getHouseByBrowser(condition);
+        //将分页信息设置到作用域中
+        model.addAttribute("pageInfo",pageInfo);
+
+        if(condition.getTitle()!=null)
+            condition.setTitle(condition.getTitle().replaceAll("%",""));
+        model.addAttribute("condition",condition);  //回显查询条
+        return "list";
+    }
+
 }
